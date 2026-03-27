@@ -1,0 +1,6 @@
+dien_tich_dat,chieu_ngang,tong_so_tang,so_phong_ngu,quan_huyen,loai_hinh,gia_rao_ban,ghi_chu_cho_bro
+50,4.0,2,2,Quận Bình Thạnh,nha_ngo_hem,5.5,"Căn chuẩn: Giá hợp lý, cấu trúc đẹp."
+500,20.0,8,15,Quận 1,nha_mat_pho_mat_tien,150.0,"Siêu phẩm: Diện tích lớn, mặt phố (AI sẽ báo Building)."
+40,3.5,7,10,Quận Phú Nhuận,nha_ngo_hem,8.0,Bất thường: Nhà hẻm nhỏ mà 7 tầng (AI sẽ chặn lỗi quy hoạch).
+100,5.0,3,12,Quận 10,nha_ngo_hem,15.0,Bất thường: 3 tầng mà 12 phòng (AI báo mật độ quá dày).
+80,4.5,4,4,Quận 3,nha_mat_pho_mat_tien,35.0,Ngáo giá: Giá AI dự báo khoảng 18-20 tỷ mà rao 35 tỷ (Lệch >30%).
