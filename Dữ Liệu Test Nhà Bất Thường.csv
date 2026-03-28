@@ -1,0 +1,6 @@
+dien_tich_dat,chieu_ngang,tong_so_tang,so_phong_ngu,quan_huyen,loai_hinh,gia_rao_ban,Ghi chú (Đừng nhập cột này)
+50.0,4.0,2,2,Binh Thanh,nha_ngo_hem,7.5,Căn bình thường (Dễ khớp model)
+85.5,5.0,3,4,Phu Nhuan,nha_mat_tien,28.0,"Căn này giá hơi ""ngáo"" (Cao bất thường)"
+42.0,3.5,1,2,Go Vap,nha_ngo_hem,3.1,Kèo thơm (Giá rẻ bất thường)
+110.0,6.0,4,6,Binh Thanh,nha_mat_tien,45.0,Biệt thự phố (Test diện tích lớn)
+60.0,4.5,2,3,Go Vap,nha_ngo_hem,8.2,Căn thực tế để check độ lệch %

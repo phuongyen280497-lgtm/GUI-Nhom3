@@ -7,3 +7,6 @@ scikit-learn
 gensim
 pyvi
 beautifulsoup4
+joblib
+xgboost
+scikit-learn

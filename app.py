@@ -59,9 +59,9 @@ def predict_price_single(dt, ngang, stang, pngu, quan, loai):
 
 # --- 4. MENU SIDEBAR ---
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/609/609803.png", width=100)
-    st.title("HCMC Property AI")
-    menu = st.radio("Menu chính:", ["🏠 Trang chủ", "💰 Dự đoán giá nhà", "🔍 Phát hiện bất thường"])
+    st.image("https://cdn-icons-png.flaticon.com/512/609/609803.png", width=50)
+    st.title("HCMC BẤT ĐỘNG SẢN")
+    menu = st.radio("**Menu chính:**", ["🏠 Trang chủ", "💰 Dự đoán giá nhà", "🔍 Phát hiện bất thường"])
 
 # --- 5. XỬ LÝ NỘI DUNG TỪNG TAB ---
 
@@ -77,6 +77,8 @@ if menu == "🏠 Trang chủ":
     Hệ thống sử dụng mô hình **XGBoost** được huấn luyện trên dữ liệu thực tế tại 3 quận TP.HCM (Bình Thạnh, Gò Vấp, Phú Nhuận).
     - **Dự đoán giá**: Tính toán giá trị thị trường dựa trên thông số nhà.
     - **Phát hiện bất thường**: So sánh giá niêm yết với giá model dự đoán để tìm ra các trường hợp 'bất thường'.
+    
+    ⚠️ **Lưu ý quan trọng**: Model được tối ưu hóa chính xác cho 3 quận trên. Các khu vực khác như **Quận 1, Quận 7...** vẫn có thể nhập liệu nhưng kết quả chỉ mang tính chất **tham khảo** do sự khác biệt về đặc thù giá trị đất giữa các khu vực.
     """)
 
     st.divider()
@@ -93,35 +95,53 @@ if menu == "🏠 Trang chủ":
     st.subheader("📖 Hướng dẫn sử dụng nhanh")
     
     guide_steps = pd.DataFrame({
-        "Cách dùng": ["Nhập tay từng căn", "Upload hàng loạt (CSV)"],
-        "Quy trình thực hiện (Sơ đồ)": [
-            "Chọn Menu ➡️ Nhập thông số ➡️ Nhấn '🚀 Chạy'",
-            "Tải file mẫu bên dưới ➡️ Điền dữ liệu ➡️ Upload ➡️ Nhấn '🚀 Quét'"
+        "Menu tính năng": ["🏠 Trang chủ", "💰 Dự đoán giá nhà", "🔍 Phát hiện bất thường"],
+        "Mục đích": [
+            "Xem thông tin nhóm, hướng dẫn sử dụng và tải file mẫu CSV",
+            "Tính toán giá trị thị trường dựa trên thông số nhà",
+            "So sánh giá niêm yết với dự đoán để tìm nhà giá rẻ/giá ảo"
         ],
-        "Lưu ý": ["Điền đủ diện tích, tầng, quận", "Phải dùng đúng file mẫu của hệ thống"]
+        "Cách thực hiện": [
+            "Đọc hướng dẫn và chọn file mẫu bên dưới",
+            "Nhập thông số hoặc Upload CSV ➡️ Nhấn '🚀 Dự đoán'",
+            "Nhập thông số + Giá rao hoặc Upload CSV ➡️ Nhấn '🚀 Quét'"
+        ]
     })
     st.table(guide_steps)
 
-    # --- NÚT TẢI FILE MẪU (CHO NGƯỜI DÙNG KHỎI BỠ NGỠ) ---
-    st.write("📂 **Dành cho mục Upload hàng loạt:**")
-    # Tạo dữ liệu mẫu chuẩn
-    template_data = pd.DataFrame({
-        "dien_tich_dat": [50.5, 80.0],
-        "chieu_ngang": [4.0, 5.0],
-        "tong_so_tang": [2, 3],
-        "so_phong_ngu": [2, 4],
-        "quan_huyen": ["Binh Thanh", "Go Vap"],
-        "loai_hinh": ["nha_ngo_hem", "nha_mat_tien"],
-        "gia_rao_ban": [8.5, 12.0] # Cột này dùng cho tab Phát hiện bất thường
-    })
-    csv_template = template_data.to_csv(index=False).encode('utf-8')
-    st.download_button(
-        label="📥 Tải File CSV Mẫu tại đây",
-        data=csv_template,
-        file_name="mau_du_lieu_nhatot.csv",
-        mime="text/csv",
-        help="Tải về, điền thông tin nhà của m vào rồi upload lên lại nhé!"
-    )
+    # --- NÚT TẢI FILE MẪU ---
+    st.write("📂 **Tải file mẫu để Upload hàng loạt (chọn loại phù hợp nhu cầu):**")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        # File mẫu cho Dự đoán
+        predict_template = pd.DataFrame({
+            "dien_tich_dat": [50.5],
+            "chieu_ngang": [4.0],
+            "tong_so_tang": [2],
+            "so_phong_ngu": [2],
+            "quan_huyen": ["Binh Thanh"],
+            "loai_hinh": ["nha_ngo_hem"]
+        })
+        st.download_button(
+            label="📥 Tải mẫu Dự đoán giá",
+            data=predict_template.to_csv(index=False).encode('utf-8'),
+            file_name="mau_du_doan_gia.csv",
+            mime="text/csv",
+            help="Dùng cho menu Dự đoán giá nhà nè bro!"
+        )
+
+    with col2:
+        # File mẫu cho Bất thường (có thêm cột giá rao bán)
+        anomaly_template = predict_template.copy()
+        anomaly_template["gia_rao_ban"] = [8.5]
+        st.download_button(
+            label="📥 Tải mẫu Phát hiện bất thường",
+            data=anomaly_template.to_csv(index=False).encode('utf-8'),
+            file_name="mau_quet_bat_thuong.csv",
+            mime="text/csv",
+            help="QUAN TRỌNG: Phải có cột giá rao bán mới quét được bất thường nha!"
+        )
 
 elif menu == "💰 Dự đoán giá nhà":
     tab1, tab2 = st.tabs(["Nhập tay 1 căn", "Upload File (CSV)"])
@@ -137,17 +157,17 @@ elif menu == "💰 Dự đoán giá nhà":
             pngu = st.number_input("Số phòng ngủ", 1, 100, 2)
             loai = st.selectbox("Loại hình", cats['loai_hinh'] if cats else ["nha_ngo_hem"])
         
-        if st.button("🚀 Chạy Dự Đoán"):
+        if st.button("🚀 Dự Đoán"):
             errs, warns = validate_house(dt, ngang, stang, pngu, loai)
             for w in warns: st.warning(w)
             if errs:
                 for e in errs: st.error(e)
             else:
                 gia = predict_price_single(dt, ngang, stang, pngu, quan, loai)
-                st.success(f"💰 Giá AI dự báo: **{gia:.2f} tỷ VNĐ** ({ (gia*1000/dt):.1f} tr/m2)")
+                st.success(f"💰 Giá dự đoán: **{gia:.2f} tỷ VNĐ** ({ (gia*1000/dt):.1f} tr/m2)")
 
     with tab2:
-        st.info("📤 Upload file CSV để AI tính toán giá trị thị trường hàng loạt.")
+        st.info("📤 Upload file CSV để tính toán giá trị thị trường hàng loạt.")
         # Dùng key riêng để không bị trùng với các tab khác
         file_pred = st.file_uploader("Chọn tệp CSV nhà cần định giá", type="csv", key="file_uploader_tab2")
         
@@ -169,7 +189,7 @@ elif menu == "💰 Dự đoán giá nhà":
                     prices.append(round(gia_du_bao, 2))
                 
                 # Thêm cột kết quả vào bảng hiện tại
-                df_input['Gia_AI_Du_Bao (Ty)'] = prices
+                df_input['Gia_Du_Bao (Ty)'] = prices
                 
                 st.success("✅ Đã tính toán xong toàn bộ danh sách!")
                 # Hiển thị bảng có cột giá mới
@@ -200,15 +220,15 @@ elif menu == "🔍 Phát hiện bất thường":
             if errs:
                 st.error(f"❌ Bất thường về Cấu trúc: {errs[0]}")
             else:
-                gia_ai = predict_price_single(dt_a, ngang_a, stang_a, pngu_a, quan_a, loai_a)
-                lech = (gia_nhap - gia_ai) / gia_ai * 100
+                gia_du_doan = predict_price_single(dt_a, ngang_a, stang_a, pngu_a, quan_a, loai_a)
+                lech = (gia_nhap - gia_du_doan) / gia_du_doan * 100
                 
-                st.write(f"Giá AI dự báo: {gia_ai:.2f} tỷ | Giá bạn nhập: {gia_nhap:.2f} tỷ")
+                st.write(f"Giá dự báo: {gia_du_doan:.2f} tỷ | Giá bạn nhập: {gia_nhap:.2f} tỷ")
                 
                 if abs(lech) > 30:
                     st.error(f"🚨 Bất thường về Giá: Lệch {lech:.1f}% so với thị trường!")
-                    if lech > 0: st.write("👉 Đánh giá: Nhà này đang bị **'Ngáo giá'** (Quá đắt).")
-                    else: st.write("👉 Đánh giá: **'Kèo cực hời'** hoặc có vấn đề pháp lý ngầm nên rẻ bất thường.")
+                    if lech > 0: st.write("👉 Đánh giá: Nhà này đang bị **quá đắt**.")
+                    else: st.write("👉 Đánh giá: **'Giá hời'** hoặc có vấn đề pháp lý ngầm nên rẻ bất thường.")
                 else:
                     st.success(f"✅ Bình thường: Giá lệch {lech:.1f}% (Nằm trong vùng giao dịch an toàn).")
 
@@ -231,7 +251,7 @@ elif menu == "🔍 Phát hiện bất thường":
                     )
                     
                     # 2. Dự báo giá - SỬA TÊN HÀM THÀNH predict_price_single cho khớp phía trên
-                    gia_ai = predict_price_single(
+                    gia_du_doan = predict_price_single(
                         row['dien_tich_dat'], row['chieu_ngang'], 
                         row['tong_so_tang'], row['so_phong_ngu'], 
                         row['quan_huyen'], row['loai_hinh']
@@ -239,23 +259,23 @@ elif menu == "🔍 Phát hiện bất thường":
                     
                     # 3. Tính độ lệch
                     gia_rao = row['gia_rao_ban']
-                    diff = ((gia_rao - gia_ai) / gia_ai) * 100
+                    diff = ((gia_rao - gia_du_doan) / gia_du_doan) * 100
                     
                     # 4. Phân loại
                     status = "✅ Bình thường"
                     if errs:
                         status = f"🚨 Lỗi: {errs[0]}"
                     elif diff < -25:
-                        status = "💎 KÈO HỜI"
+                        status = "💎 GIÁ HỜI"
                     elif diff > 30:
-                        status = "🚩 Ngáo giá"
+                        status = "🚩 GIÁ CAO"
                     
                     results.append({
                         "STT": idx + 1,
                         "Quận": row['quan_huyen'],
                         "Diện tích": row['dien_tich_dat'],
                         "Giá Rao (Tỷ)": round(float(gia_rao), 2),
-                        "Giá AI (Tỷ)": round(float(gia_ai), 2),
+                        "Giá dự doán (Tỷ)": round(float(gia_du_doan), 2),
                         "Độ lệch (%)": f"{diff:.1f}%",
                         "Trạng thái": status
                     })
@@ -266,8 +286,8 @@ elif menu == "🔍 Phát hiện bất thường":
                 st.dataframe(res_df, use_container_width=True)
                 
                 # Thống kê
-                kèo_hời = res_df[res_df['Trạng thái'] == "💎 KÈO HỜI"]
-                if not kèo_hời.empty:
-                    st.success(f"🔥 Tìm thấy **{len(kèo_hời)}** kèo hời trong danh sách!")
+                giá_hời = res_df[res_df['Trạng thái'] == "💎 GIÁ HỜI"]
+                if not giá_hời.empty:
+                    st.success(f"🔥 Tìm thấy **{len(giá_hời)}** giá hời trong danh sách!")
                 else:
-                    st.write("Chưa tìm thấy kèo nào rẻ hơn 25% so với giá AI.")
+                    st.write("Chưa tìm thấy kèo nào rẻ hơn 25% so với giá dự đoán.")
