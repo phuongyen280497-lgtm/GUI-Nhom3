@@ -23,8 +23,15 @@ def validate_house(dt, ngang, stang, pngu, loai):
     dai = dt / ngang
     dt_su_dung = dt * stang 
     dt_san_phong = dt_su_dung / pngu  
-    phong_tang = pngu / stang        
+    phong_tang = pngu / stang         
     
+    # --- THÊM MỚI: RÀO CHẮN CHIỀU NGANG VÀ TỶ LỆ ---
+    if ngang < 2.0: 
+        errors.append(f"❌ Chiều ngang {ngang}m là quá hẹp, không đủ tiêu chuẩn xây dựng/sinh hoạt.")
+    if dai > ngang * 6: 
+        errors.append(f"❌ Nhà quá mỏng: Chiều dài ({dai:.1f}m) gấp hơn 6 lần chiều ngang ({ngang}m).")
+    # ----------------------------------------------
+
     if stang > 8: errors.append(f"❌ Vượt quy mô: {stang} tầng là Cao ốc/Khách sạn.")
     if loai == "nha_ngo_hem":
         if stang > 6: errors.append("❌ Sai quy hoạch: Nhà hẻm tối đa 6 tầng.")
