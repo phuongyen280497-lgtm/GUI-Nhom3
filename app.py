@@ -240,7 +240,7 @@ elif menu == "🔍 Phát hiện bất thường":
                     st.success(f"✅ Bình thường: Giá lệch {lech:.1f}% (Nằm trong vùng giao dịch an toàn).")
 
     with tab4:
-        st.info("📤 Upload file CSV có cột `gia_rao_ban` để kiểm tra.")
+        st.info("📤 Upload file CSV có cột **gia_rao_ban** để kiểm tra.")
         file_anom = st.file_uploader("Chọn file CSV quét hàng loạt", type="csv", key="tab4_upload")
         
         if file_anom:
