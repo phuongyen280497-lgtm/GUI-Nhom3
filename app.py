@@ -278,13 +278,16 @@ elif menu == "🔍 Phát hiện bất thường":
                         status = "🚩 GIÁ CAO"
                     
                     results.append({
-                        "STT": idx + 1,
-                        "Quận": row['quan_huyen'],
-                        "Diện tích": row['dien_tich_dat'],
-                        "Giá Rao (Tỷ)": round(float(gia_rao), 2),
-                        "Giá dự doán (Tỷ)": round(float(gia_du_doan), 2),
-                        "Độ lệch (%)": f"{diff:.1f}%",
-                        "Trạng thái": status
+                            "STT": idx + 1,
+                            "Quận": row['quan_huyen'],
+                            "Diện tích": row['dien_tich_dat'],
+                            "Ngang": row['chieu_ngang'],       # Thêm cột này
+                            "Tầng": row['tong_so_tang'],       # Thêm cột này
+                            "Phòng ngủ": row['so_phong_ngu'], # Thêm cột này
+                            "Giá Rao (Tỷ)": round(float(gia_rao), 2),
+                            "Giá dự doán (Tỷ)": round(float(gia_du_doan), 2),
+                            "Độ lệch (%)": f"{diff:.1f}%",
+                            "Trạng thái": status
                     })
                 
                 # Hiển thị bảng
